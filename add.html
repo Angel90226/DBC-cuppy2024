@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Yusei+Magic&family=Zen+Maru+Gothic&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <title>Cuppy-Home</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: "Yusei Magic", serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .dialog-box {
+            /* background-color: rgba(255, 255, 255, 0.8); */
+            position: absolute;
+            top: 5%;
+            padding: 20px;
+            /* border-radius: 10px; */
+            /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); */
+            /* max-width: 300px; */
+            text-align: center;
+        }
+        .sticker-container {
+            background-color: #fff;
+            position: absolute;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 350px;
+        }
+        .sticker-container {
+            color: #CC6B69;
+            text-align: center;
+        }
+        .sticker-container input[type="text"] {
+            width: 60%;
+            /* padding: 5px; */
+            margin: 5px 0;
+            background-color: #f9eded;
+            border: 1px solid #f4afae;
+            border-radius: 10px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .sticker-container button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #CC6B69;
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .sticker-container button:hover {
+            background-color: #a85352;
+        }
+
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background-color: #f7dbdc;
+            text-align: center;
+            padding: 5% 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .button-container {
+            width: 100%;
+        }
+        .btn-group {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background-color: #f7dbdc;
+        }
+        .btn-primary {
+            width: 25%;
+            padding: 20px;
+            border: none;
+            background-color: #f7dbdc;
+            color: #CC6B69;
+            font-size: 1.4rem;
+        }
+        .btn-primary:hover {
+            background-color: #CC6B69;
+            color: #f7dbdc;
+        }
+        .sticker-empty {
+            position: absolute;
+            width: 25%;
+            top: 52%;
+            left: 25%;
+        }
+        .form-group {
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+        }
+        .sticker-container input::placeholder {
+            color: rgb(187, 187, 187);
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+        .sticker-container input:focus::placeholder {
+            opacity: 0;
+        }
+        .user-name {
+            display: flex; 
+            justify-content: flex-end; 
+            align-items: center;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <div class="dialog-box">
+        <h2>尼可以幫我新增飲料日記嗎?
+        </h2>
+        <p>我想記下我喝過的飲料!</p>
+    </div>
+    <div class="sticker-container">
+        <form action="/DBC-cuppy2024/journal.html" method="post">
+            <h4>Cuppy Journal</h4>
+            <h6>2024.11.12</h6>
+            <div class="form-group">
+                <label for="shop">Shop</label>
+                <input type="text" id="shop" name="shop" placeholder="五桐號" required>
+            </div>
+            <div class="form-group">
+                <label for="drink">Drink</label>
+                <input type="text" id="drink" name="drink" placeholder="五桐茶" required>
+            </div>
+            <div class="form-group">
+                <label for="sugar-ice">Sugar & Ice</label>
+                <input type="text" id="sugar-ice" name="sugar-ice" placeholder="微糖微冰" required>
+            </div>
+            <div class="user-name">
+                <p for="note">Name</p>
+            </div>
+            <hr>
+            <button type="submit">Add</button>
+        </form>
+    </div>
+    <div class="btn-group" role="group">
+        <a href="home.html" class="btn btn-primary">
+        <i class="bi bi-house"></i>
+        </a>
+        <a href="journey.html" class="btn btn-primary">
+        <i class="bi bi-map"></i>
+        </a>
+        <a href="journal.html" class="btn btn-primary">
+        <i class="bi bi-journal"></i>
+        </a>
+        <a href="add.html" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i>
+        </a>
+    </div>
+</body>
+
+</html>
