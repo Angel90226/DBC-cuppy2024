@@ -75,7 +75,7 @@
 
 <body>
     <div class="dialog-box">
-        <h2>Hi [name]!</h2>
+        <h2 id="greeting">Hi [name]!</h2>
         <p>I'm Cuppy! Nice to meet you!!!😀</p>
     </div>
     <!-- <div class="bottom-nav"> -->
@@ -96,6 +96,18 @@
             
         <!-- </div> -->
     </div>
+    <script>
+        // 從 localStorage 中取出 username
+        const username = localStorage.getItem('username');
+    
+        // 如果 username 存在，將其顯示在 greeting 元素中
+        if (username) {
+            document.getElementById('greeting').textContent = `Hi ${username}!`;
+        } else {
+            document.getElementById('greeting').textContent = "Hi there!";
+        }
+    </script>
+    
 </body>
 
 </html>

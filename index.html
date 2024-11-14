@@ -104,5 +104,34 @@
             <button type="submit">Get Start</button>
         </form>
     </div>
+    <script>
+        const form = document.querySelector('form');
+        const apiUrl = 'https://script.google.com/macros/s/AKfycbyD_LXpUnn6BSWGIMiyvWtXJW11QfsYyn6xCgwY5L-cmn6jSO4z3oJBXt0Z6Rk3tgND/exec';  // 將 Apps Script API URL 儲存成一個變數
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = form.username.value;
+            if (username) {
+                try {
+                    // 將使用者名稱發送至 Google Apps Script API
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: new URLSearchParams({ username })
+                    });
+                    const result = await response.text();
+                    if (response.ok) {
+                        localStorage.setItem('username', username);
+                        window.location.href = '/DBC-cuppy2024/home.html';
+                    } else {
+                        console.error(result);  // 錯誤時的回應
+                    }
+                } catch (error) {
+                    console.error("Error:", error);
+                }
+            }
+        });
+
+    </script>
 </body>
 </html>
