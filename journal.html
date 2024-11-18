@@ -70,13 +70,15 @@
             color: #f7dbdc;
         }
 
+
         #stickerContainer {
+            max-height: 25%;
+            min-width: 70%;
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            margin-top: 20px;
             position: absolute;
-            bottom: 25%; /* 調整區塊距離底部的距離 */
+            top: 52%; /* 調整區塊距離頂部的距離 */
             left: 50%;
             transform: translateX(-50%);
         }
@@ -89,23 +91,28 @@
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
             padding: 6px;
             overflow: hidden;
+            cursor: pointer;
+        }
+
+        .sticker-item:hover {
+            filter: brightness(0.9);
         }
 
         .sticker-item p {
-            margin: 2px 0;
-            font-size: 6px;
+            margin: 1px 0;
+            font-size: 8px;
             color: #CC6B69;
         }
 
         .sticker-item .sticker-info div {
-            font-size: 6px;
+            font-size: 8px;
             text-align: left;
-            margin-bottom: 2px;
+            margin-bottom: 1px;
         }
 
         .sticker-item .sticker-username {
             text-align: right;
-            font-size: 6px;
+            font-size: 8px;
             color: #666;
         }
         /* 新增貼紙的外觀設計 */
@@ -116,7 +123,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 80px;
+            height: 100%;
             position: relative;
             cursor: pointer;
             overflow: hidden;
@@ -212,10 +219,9 @@
         <h2>尼可以看看我身上的貼紙</h2>
         <p>是我以前喝過的飲料歐!</p>
     </div>
-    <div class="container mt-4">
         <div class="row" id="stickerContainer">
             <!-- 靜態的「新增貼紙」 -->
-            <div class="col-6 col-md-4 mb-4">
+            <div class="col-6 col-md-4 mb-2">
                 <a href="add.html" class="sticker-add-link">
                     <div class="sticker-add">
                         <span class="sticker-add-icon">+</span>
@@ -237,7 +243,6 @@
                 </a> -->
             </div>
         </div>
-    </div>
     <!-- 模態框 (modal) -->
     <div id="stickerModal" class="modal-overlay">
         <div class="modal-content">
@@ -285,9 +290,17 @@
 
         function renderStickers(records) {
             stickerRecords = records; // 儲存所有記錄
-            records.forEach((record, index) => {
+
+            // 排序貼紙記錄，根據日期從新到舊
+            const sortedRecords = records.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            // 只取前 5 個記錄（新增貼紙占 1 個）
+            const limitedRecords = sortedRecords.slice(0, 5);
+
+            // 渲染記錄貼紙
+            limitedRecords.forEach((record, index) => {
                 const sticker = document.createElement('div');
-                sticker.className = 'col-6 col-md-4 mb-4';
+                sticker.className = 'col-6 col-md-4 mb-2';
 
                 const stickerItem = `
                     <div class="sticker-item" data-index="${index}">
@@ -306,7 +319,7 @@
                 stickerContainer.appendChild(sticker);
             });
 
-            // 為所有貼紙添加點擊事件
+            // 為所有貼紙添加點擊事件（打開模態框）
             document.querySelectorAll('.sticker-item').forEach(sticker => {
                 sticker.addEventListener('click', event => {
                     const index = parseInt(event.currentTarget.dataset.index, 10);
@@ -314,6 +327,7 @@
                 });
             });
         }
+
 
 
         function openModal(index) {
