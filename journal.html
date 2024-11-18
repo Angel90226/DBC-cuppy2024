@@ -16,7 +16,7 @@
     <style>
         body {
             background: url('pictures/cuppy_front.png') no-repeat center 50% fixed;
-            background-size: 70% auto;
+            background-size: 100% auto;
             
             background-color: #f0f0f0;
             font-family: "Yusei Magic", serif;
@@ -69,15 +69,141 @@
             background-color: #CC6B69;
             color: #f7dbdc;
         }
-        .sticker-empty {
+
+        #stickerContainer {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
             position: absolute;
-            width: 25%;
-            top: 52%;
-            left: 25%;
+            bottom: 25%; /* 調整區塊距離底部的距離 */
+            left: 50%;
+            transform: translateX(-50%);
         }
-        .sticker-empty:hover {
-            filter: brightness(0.7);
+
+        .sticker-item {
+            position: relative;
+            text-align: center;
+            background-color: #FFD6D6;
+            border-radius: 10px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            padding: 6px;
+            overflow: hidden;
         }
+
+        .sticker-item p {
+            margin: 2px 0;
+            font-size: 6px;
+            color: #CC6B69;
+        }
+
+        .sticker-item .sticker-info div {
+            font-size: 6px;
+            text-align: left;
+            margin-bottom: 2px;
+        }
+
+        .sticker-item .sticker-username {
+            text-align: right;
+            font-size: 6px;
+            color: #666;
+        }
+        /* 新增貼紙的外觀設計 */
+        .sticker-add {
+            background-color: #ffffff; /* 白色背景 */
+            border: 2px dashed #CC6B69; /* 虛線邊框 */
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80px;
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .sticker-add:hover {
+            filter: brightness(0.9);
+        }
+
+        .sticker-add-text {
+            position: absolute;
+            font-size: 14px;
+            color: #CC6B69;
+            z-index: 1; /* 保持文字在 + 號的上方 */
+        }
+
+        .sticker-add-icon {
+            position: absolute;
+            font-size: 50px; /* 大大的 + 號 */
+            color: #f4c2c2;
+            z-index: 0; /* 保持 + 號在文字下方 */
+            opacity: 0.5; /* 調整透明度 */
+        }
+
+        .sticker-add-link {
+            text-decoration: none; /* 移除連結下劃線 */
+        }
+
+        /* 模態框的背景遮罩 */
+        .modal-overlay {
+            display: none; /* 預設隱藏 */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        /* 模態框內容 */
+        .modal-content {
+            position: relative;
+            background: #FFD6D6;
+            border-radius: 10px;
+            padding: 20px;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 左右箭頭 */
+        .arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #CC6B69;
+            cursor: pointer;
+        }
+
+        .left-arrow {
+            left: -40px;
+        }
+
+        .right-arrow {
+            right: -40px;
+        }
+
+        /* 模態框貼紙內容 */
+        .modal-sticker {
+            text-align: center;
+        }
+
+        .modal-sticker p {
+            margin: 10px 0;
+            font-size: 16px;
+            color: #CC6B69;
+        }
+
+
+
     </style>
 </head>
 
@@ -86,11 +212,45 @@
         <h2>尼可以看看我身上的貼紙</h2>
         <p>是我以前喝過的飲料歐!</p>
     </div>
-    <div>
-        <a href="add.html">
-            <img class="sticker-empty" src="pictures/sticker_empty.png">
-        </a>
+    <div class="container mt-4">
+        <div class="row" id="stickerContainer">
+            <!-- 靜態的「新增貼紙」 -->
+            <div class="col-6 col-md-4 mb-4">
+                <a href="add.html" class="sticker-add-link">
+                    <div class="sticker-add">
+                        <span class="sticker-add-icon">+</span>
+                        <!-- <p class="sticker-add-text">新增貼紙</p> -->
+                    </div>
+                </a>
+                <!-- <div class="sticker-item">
+                    <p>Cuppy Journal</p>
+                    <p class="sticker-date text-center">Record date</p>
+                    <div class="sticker-info">
+                        <div>店家名稱: Shop</div>
+                        <div>飲料品項: Drink</div>
+                        <div>甜度冰塊: Sugar-Ice</div>
+                    </div>
+                    <p class="sticker-username text-end">username</p>
+                </div> -->
+                <!-- <a href="add.html">
+                    <img class="sticker-empty img-fluid rounded" src="pictures/sticker_empty.png" alt="新增貼紙">
+                </a> -->
+            </div>
+        </div>
     </div>
+    <!-- 模態框 (modal) -->
+    <div id="stickerModal" class="modal-overlay">
+        <div class="modal-content">
+            <button id="prevButton" class="arrow left-arrow">&lt;</button>
+            <div class="modal-sticker">
+                <p id="modalDate"></p>
+                <div id="modalInfo"></div>
+                <p id="modalUsername"></p>
+            </div>
+            <button id="nextButton" class="arrow right-arrow">&gt;</button>
+        </div>
+    </div>
+    
     <div class="btn-group" role="group">
         <a href="home.html" class="btn btn-primary">
         <i class="bi bi-house"></i>
@@ -105,6 +265,98 @@
         <i class="bi bi-plus-circle"></i>
         </a>
     </div>
-</body>
+    <script>
+        const apiUrl = 'https://script.google.com/macros/s/AKfycbyD_LXpUnn6BSWGIMiyvWtXJW11QfsYyn6xCgwY5L-cmn6jSO4z3oJBXt0Z6Rk3tgND/exec';  // 將 Apps Script API URL 儲存成一個變數
+        const stickerContainer = document.getElementById('stickerContainer');
+    
+        // 從 API 獲取飲料資料
+        async function fetchDrinkRecords() {
+            try {
+                const response = await fetch(apiUrl);
+                const records = await response.json(); // 將回應轉換為 JSON
+                renderStickers(records); // 渲染貼紙
+            } catch (error) {
+                console.error('Failed to fetch drink records:', error);
+            }
+        }
+    
+        let currentIndex = 0; // 當前顯示的貼紙索引
+        let stickerRecords = []; // 貼紙記錄
 
+        function renderStickers(records) {
+            stickerRecords = records; // 儲存所有記錄
+            records.forEach((record, index) => {
+                const sticker = document.createElement('div');
+                sticker.className = 'col-6 col-md-4 mb-4';
+
+                const stickerItem = `
+                    <div class="sticker-item" data-index="${index}">
+                        <p>Cuppy Journal</p>
+                        <p class="sticker-date text-center">${record.date.split('T')[0].replace(/-/g, '.')}</p>
+                        <div class="sticker-info">
+                            <div>店家名稱: ${record.shop}</div>
+                            <div>飲料品項: ${record.drink}</div>
+                            <div>甜度冰塊: ${record.sugarIce}</div>
+                        </div>
+                        <p class="sticker-username text-end">${record.username}</p>
+                    </div>
+                `;
+
+                sticker.innerHTML = stickerItem;
+                stickerContainer.appendChild(sticker);
+            });
+
+            // 為所有貼紙添加點擊事件
+            document.querySelectorAll('.sticker-item').forEach(sticker => {
+                sticker.addEventListener('click', event => {
+                    const index = parseInt(event.currentTarget.dataset.index, 10);
+                    openModal(index);
+                });
+            });
+        }
+
+
+        function openModal(index) {
+            currentIndex = index;
+            const record = stickerRecords[currentIndex];
+            document.getElementById('modalDate').textContent = record.date.split('T')[0].replace(/-/g, '.');
+            document.getElementById('modalInfo').innerHTML = `
+                <div>店家名稱: ${record.shop}</div>
+                <div>飲料品項: ${record.drink}</div>
+                <div>甜度冰塊: ${record.sugarIce}</div>
+            `;
+            document.getElementById('modalUsername').textContent = record.username;
+
+            // 顯示模態框
+            document.getElementById('stickerModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('stickerModal').style.display = 'none';
+        }
+
+        function showNextSticker() {
+            currentIndex = (currentIndex + 1) % stickerRecords.length; // 循環到下一個貼紙
+            openModal(currentIndex);
+        }
+
+        function showPrevSticker() {
+            currentIndex = (currentIndex - 1 + stickerRecords.length) % stickerRecords.length; // 循環到上一個貼紙
+            openModal(currentIndex);
+        }
+
+        // 添加左右箭頭的事件
+        document.getElementById('nextButton').addEventListener('click', showNextSticker);
+        document.getElementById('prevButton').addEventListener('click', showPrevSticker);
+
+        // 添加模態框關閉邏輯
+        document.getElementById('stickerModal').addEventListener('click', event => {
+            if (event.target.id === 'stickerModal') closeModal(); // 點擊背景關閉模態框
+        });
+
+    
+        // 頁面載入時呼叫 API
+        fetchDrinkRecords();
+    </script>    
+</body>
 </html>

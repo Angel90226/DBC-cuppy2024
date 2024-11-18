@@ -17,7 +17,7 @@ function doPost(e) {
 
 // 處理登入請求的函式
 function handleLogin(params) {
-  const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('LoginSheet'); // 登入資料的工作表
+  const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(SHEET_NAME_LOGIN); // 登入資料的工作表
   const formattedDate = Utilities.formatDate(new Date(), "GMT+8", "yyyy-MM-dd HH:mm:ss");
   const username = params.username;
 
@@ -30,7 +30,7 @@ function handleLogin(params) {
 
 // 處理飲料日記的函式
 function handleDrinkJournal(params) {
-  const sheet = SpreadsheetApp.openById('YOUR_SHEET_ID').getSheetByName('JournalSheet'); // 飲料日記的工作表
+  const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(SHEET_NAME_RECORD); // 飲料日記的工作表
   const formattedDate = Utilities.formatDate(new Date(), "GMT+8", "yyyy-MM-dd HH:mm:ss");
   const username = params.username;
   const shop = params.shop;
