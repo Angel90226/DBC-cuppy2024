@@ -65,10 +65,20 @@
             background-color: #CC6B69;
             color: #f7dbdc;
         }
-        .btn-primary:active {
-            background-color: #CC6B69;
-            color: #f7dbdc;
+        .btn.btn-primary:active {
+            background-color: #a85352 !important; /* 強制覆蓋 */
+            color: #ffffff !important; /* 強制修改文字顏色 */
+            box-shadow: inset 0px 4px 6px rgba(0, 0, 0, 0.2); /* 點擊時的按壓效果 */
+            border-color: #a85352 !important; /* 防止邊框顏色也被影響 */
         }
+        .btn.active {
+            background-color: #e0b5b7 !important; /* 當前頁面的背景色 */
+            color: #b34846 !important; /* 當前頁面的文字顏色 */
+            border: 2px solid #d48887; /* 可選：添加白色邊框 */
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2); /* 按壓效果 */
+        }
+
+        
     </style>
 </head>
 
@@ -79,7 +89,7 @@
     </div>
     <!-- <div class="bottom-nav"> -->
         <div class="btn-group" role="group">
-            <a href="home.html" class="btn btn-primary">
+            <a href="home.html" class="btn btn-primary active">
             <i class="bi bi-house"></i>
             </a>
             <a href="journey.html" class="btn btn-primary">
