@@ -29,15 +29,16 @@
             <i class="bi bi-map"></i>
             </a>
             <a href="journal.html" class="btn btn-primary">
-            <i class="bi bi-journal"></i>
+                <i class="bi bi-journal"></i>
             </a>
             <a href="add.html" class="btn btn-primary">
-            <i class="bi bi-plus-circle"></i>
+                <i class="bi bi-book"></i>
             </a>
         </div>
     </div>
     <script>
         const cupId = localStorage.getItem('cupId') || "1"; // 從 localStorage 中讀取 cupId，預設為 1
+
         // 定義圖片清單
         const images = [
             `./assets/images/${cupId}/hide.webp`,
@@ -45,16 +46,29 @@
             `./assets/images/${cupId}/full.webp`
         ];
 
-        let currentIndex = 0;
+        let currentIndex = 0; // 當前圖片索引
+        let isReversing = false; // 用於追踪動畫方向
+        let isPlaying = false; // 用於防止動畫重複觸發
 
         // 定義函數：依次播放圖片
         function playBackgroundAnimation() {
             if (currentIndex < images.length) {
                 document.body.style.backgroundImage = `url('${images[currentIndex]}')`;
                 currentIndex++;
-                setTimeout(playBackgroundAnimation, 400); // 每 2 秒切換一次圖片
+                setTimeout(playBackgroundAnimation, 400); // 每 400ms 切換一次圖片
+            } else {
+                isPlaying = false; // 動畫結束後解除鎖定
+                currentIndex = 0; // 重置索引，方便下一次播放
             }
         }
+
+        // 監聽畫面點擊事件
+        document.addEventListener("click", () => {
+            if (!isPlaying) {
+                isPlaying = true; // 鎖定動畫
+                playBackgroundAnimation();
+            }
+        });
 
         // 進入頁面時執行動畫
         document.addEventListener("DOMContentLoaded", playBackgroundAnimation);
@@ -71,12 +85,6 @@
             document.getElementById('greeting').textContent = "Hi there!";
         }
         
-        if (cuppyName) {
-            document.querySelector('.dialog-box p').textContent = `我是${cuppyName} 很高興認識尼!!😀`;
-        } else {
-            console.error("找不到對應的 Cuppy 名稱");
-        }
-        
         console.log("cupId:", cupId);
         fetchCuppyName(cupId);
 
@@ -87,7 +95,7 @@
             const cuppy = cuppyNames.find(c => String(c.cupId) === cupId);
             console.log("cuppy:", cuppy);
             if (cuppy) {
-                document.querySelector('.dialog-box p').textContent = `我是${cuppy.cuppyName} 很高興認識尼!!😀`;
+                document.querySelector('.dialog-box p').textContent = `${cuppy.cuppyName}`;
             } else {
                 console.error("找不到對應的 Cuppy 名稱");
             }

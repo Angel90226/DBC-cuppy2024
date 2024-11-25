@@ -14,7 +14,7 @@
 
 body {
     background-color: #f0f0f0;
-    font-family: 'Yusei Magic', serif;
+    font-family: 'Yusei Magic', 'Taipei Sans';
     display: flex;
     justify-content: center;
     align-items: center;
@@ -30,11 +30,11 @@ body.index {
 
 body.home {
     background: no-repeat center 50% fixed;
-    background-size: 70% auto;
+    background-size: 100% auto;
 }
 body.journal {
     background: no-repeat center 50% fixed;
-    background-size: 100% auto;
+    background-size: 140% auto;
 }
 
 .banner {
@@ -96,7 +96,7 @@ body.journal {
 }
 .dialog-box {
     position: absolute;
-    top: 5%;
+    top: 3%;
     padding: 20px;
     text-align: center;
 }
