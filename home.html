@@ -19,7 +19,7 @@
     <script src="./assets/js/script.js"></script>
     <div class="dialog-box">
         <h2 id="greeting">Hi [name]!</h2>
-        <p>我是[cuppy-name] 很高興認識尼!!😀</p>
+        <p></p>
     </div>
         <div class="btn-group" role="group">
             <a href="home.html" class="btn btn-primary active">
@@ -37,12 +37,13 @@
         </div>
     </div>
     <script>
+        const cupId = localStorage.getItem('cupId') || "1"; // 從 localStorage 中讀取 cupId，預設為 1
         // 定義圖片清單
         const images = [
-            './assets/images/1/hide.webp',
-            './assets/images/1/open.webp',
-            './assets/images/1/hand.webp',
-            './assets/images/1/full.webp'
+            `./assets/images/${cupId}/hide.webp`,
+            `./assets/images/${cupId}/open.webp`,
+            `./assets/images/${cupId}/hand.webp`,
+            `./assets/images/${cupId}/full.webp`
         ];
 
         let currentIndex = 0;
@@ -77,8 +78,6 @@
             console.error("找不到對應的 Cuppy 名稱");
         }
         
-        // 從 localStorage 取得 cupId
-        const cupId = localStorage.getItem('cupId') || "1"; // 預設為 1
         console.log("cupId:", cupId);
         fetchCuppyName(cupId);
 
