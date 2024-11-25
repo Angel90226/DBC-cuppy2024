@@ -10,11 +10,11 @@
     <script src="./assets/js/script.js"></script>
     <div class="dialog-box">
         <h2>猜猜我是誰?</h2>
-        <p>告訴我你的名字，我就會出來啦!</p>
+        <p>告訴我尼的名字，我就會從杯子裡出來!</p>
     </div>
     <div class="login-container">
         <form action="/DBC-cuppy2024/home.html">
-            <input type="text" name="username" placeholder="你叫什麼名字?" required>
+            <input type="text" name="username" placeholder="尼叫什麼名字?" required>
             <button type="submit">打開杯蓋!</button>
         </form>
     </div>
@@ -22,20 +22,27 @@
         const form = document.querySelector('form');
         const apiUrl = 'https://script.google.com/macros/s/AKfycbyD_LXpUnn6BSWGIMiyvWtXJW11QfsYyn6xCgwY5L-cmn6jSO4z3oJBXt0Z6Rk3tgND/exec';  // 將 Apps Script API URL 儲存成一個變數
 
+        // 解析 URL 中的 cupId
+        const urlParams = new URLSearchParams(window.location.search);
+        const cupId = urlParams.get('cupId'); // 如果沒有 cupId，值為 null
+
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             const username = form.username.value;
-            if (username) {
+            if (username && cupId) {
                 try {
                     // 將使用者名稱發送至 Google Apps Script API
                     const response = await fetch(apiUrl, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                        body: new URLSearchParams({ username })
+                        body: new URLSearchParams({ username, cupId }),
                     });
                     const result = await response.text();
                     if (response.ok) {
                         localStorage.setItem('username', username);
+                        localStorage.setItem('cupId', cupId);
+
+                        //跳轉到首頁
                         window.location.href = '/DBC-cuppy2024/home.html';
                     } else {
                         console.error(result);  // 錯誤時的回應

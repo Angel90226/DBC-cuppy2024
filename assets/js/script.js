@@ -16,15 +16,15 @@
         // 如果未檢測到 cupId，顯示錯誤提示或引導用戶操作
         console.error("No cupId detected in URL.");
     }
-    
+
     // 從 localStorage 獲取 cupId，若無則使用預設值 "1"
     const cupId = localStorage.getItem("cupId") || "1";
 
     // 定義對應的背景圖片路徑
     const backgroundImages = {
         index: `./assets/images/${cupId}/hide.webp`,
-        home: `./assets/images/${cupId}/full.webp`,
-        journal: `./assets/images/${cupId}/front.webp`
+        home: `./assets/images/${cupId}/hide.webp`,
+        journal: `./assets/images/${cupId}/front.webp`,
     };
 
     // 獲取 body 標籤

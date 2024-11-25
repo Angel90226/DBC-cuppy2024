@@ -6,14 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./assets/css/styles.css">
     <title>Cuppy-Home</title>
+    <style>
+        body {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            transition: background-image 0.5s ease-in-out; /* 切換圖片時的過渡效果 */
+        }
+    </style>
 </head>
 <body class="home">
     <script src="./assets/js/script.js"></script>
     <div class="dialog-box">
         <h2 id="greeting">Hi [name]!</h2>
-        <p>我是[cuppy-name] 很高興認識你!!😀</p>
+        <p>我是[cuppy-name] 很高興認識尼!!😀</p>
     </div>
-    <!-- <div class="bottom-nav"> -->
         <div class="btn-group" role="group">
             <a href="home.html" class="btn btn-primary active">
             <i class="bi bi-house"></i>
@@ -28,18 +35,64 @@
             <i class="bi bi-plus-circle"></i>
             </a>
         </div>
-            
-        <!-- </div> -->
     </div>
     <script>
+        // 定義圖片清單
+        const images = [
+            './assets/images/1/hide.webp',
+            './assets/images/1/open.webp',
+            './assets/images/1/hand.webp',
+            './assets/images/1/full.webp'
+        ];
+
+        let currentIndex = 0;
+
+        // 定義函數：依次播放圖片
+        function playBackgroundAnimation() {
+            if (currentIndex < images.length) {
+                document.body.style.backgroundImage = `url('${images[currentIndex]}')`;
+                currentIndex++;
+                setTimeout(playBackgroundAnimation, 400); // 每 2 秒切換一次圖片
+            }
+        }
+
+        // 進入頁面時執行動畫
+        document.addEventListener("DOMContentLoaded", playBackgroundAnimation);
+    </script>
+    <script>
+        const apiUrl = 'https://script.google.com/macros/s/AKfycbyD_LXpUnn6BSWGIMiyvWtXJW11QfsYyn6xCgwY5L-cmn6jSO4z3oJBXt0Z6Rk3tgND/exec';  // 將 Apps Script API URL 儲存成一個變數
         // 從 localStorage 中取出 username
         const username = localStorage.getItem('username');
-    
+        const cuppyName = localStorage.getItem('cuppyName');
         // 如果 username 存在，將其顯示在 greeting 元素中
         if (username) {
             document.getElementById('greeting').textContent = `Hi ${username}!`;
         } else {
             document.getElementById('greeting').textContent = "Hi there!";
+        }
+        
+        if (cuppyName) {
+            document.querySelector('.dialog-box p').textContent = `我是${cuppyName} 很高興認識尼!!😀`;
+        } else {
+            console.error("找不到對應的 Cuppy 名稱");
+        }
+        
+        // 從 localStorage 取得 cupId
+        const cupId = localStorage.getItem('cupId') || "1"; // 預設為 1
+        console.log("cupId:", cupId);
+        fetchCuppyName(cupId);
+
+        async function fetchCuppyName(cupId) {
+            const response = await fetch(`${apiUrl}?type=cuppyNames`); 
+            const cuppyNames = await response.json();
+            console.log("cuppyNames:", cuppyNames);
+            const cuppy = cuppyNames.find(c => String(c.cupId) === cupId);
+            console.log("cuppy:", cuppy);
+            if (cuppy) {
+                document.querySelector('.dialog-box p').textContent = `我是${cuppy.cuppyName} 很高興認識尼!!😀`;
+            } else {
+                console.error("找不到對應的 Cuppy 名稱");
+            }
         }
     </script>
     

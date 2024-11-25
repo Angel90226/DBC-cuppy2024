@@ -9,6 +9,7 @@
 </head>
 
 <body class="journal">
+    <script src="./assets/js/script.js"></script>
     <div class="dialog-box">
         <h2>這些貼紙是我最近喝過的飲料</h2>
         <p>點空白貼紙和我一起新增飲料日記!</p>
@@ -52,7 +53,8 @@
         </a>
     </div>
     <script>
-        const apiUrl = 'https://script.google.com/macros/s/AKfycbyD_LXpUnn6BSWGIMiyvWtXJW11QfsYyn6xCgwY5L-cmn6jSO4z3oJBXt0Z6Rk3tgND/exec';  // 將 Apps Script API URL 儲存成一個變數
+        const cupId = localStorage.getItem('cupId'); // 從 localStorage 中讀取 cupId
+        const apiUrl = `https://script.google.com/macros/s/AKfycbyD_LXpUnn6BSWGIMiyvWtXJW11QfsYyn6xCgwY5L-cmn6jSO4z3oJBXt0Z6Rk3tgND/exec?type=drinkRecords&cupId=${cupId}`;  // 將 Apps Script API URL 儲存成一個變數
         const stickerContainer = document.getElementById('stickerContainer');
     
         // 從 API 獲取飲料資料

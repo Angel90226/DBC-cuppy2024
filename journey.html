@@ -7,6 +7,7 @@
     <title>Cuppy-Journey</title>
 </head>
 <body>
+    <script src="./assets/js/script.js"></script>
     <!-- 搜索框 -->
     <input id="searchInput" type="text" placeholder="輸入飲料店，例如 五桐號清大店" style="display: none;">
     <!-- 地圖容器 -->
@@ -16,7 +17,7 @@
     <div id="introOverlay" class="overlay">
         <div class="chat-box">
             <div class="chat-bubble">
-                <img src="./assets/images/cuppy_avatar.png" alt="Cuppy" class="chat-avatar">
+                <img id="chat-avatar" class="chat-avatar" alt="Cuppy">
                 <div id="chatMessage" class="chat-message">
                     <p>這是目前為止我旅行過的地方!</p>
                 </div>
@@ -27,11 +28,12 @@
 
 
     <script>
-        const cupId = 'localStorage.getItem("cupId")';
+        const cupId = localStorage.getItem('cupId') || "1"; // 預設為 1
+        console.log("cupId:", cupId);
 
         // 動態生成圖片路徑
-        const avatarSrc = `assets/images/cuppy${cupId}/avatar.png`;
-        const mapMarkerSrc = `assets/images/cuppy${cupId}/mapmarker.webp`;
+        const avatarSrc = `./assets/images/${cupId}/avatar.webp`;
+        const mapMarkerSrc = `./assets/images/${cupId}/mapmarker.webp`;
 
         // 將圖片路徑插入到 HTML
         document.getElementById("chat-avatar").src = avatarSrc;
@@ -116,7 +118,8 @@
         }
 
         async function fetchFootprints() {
-            const apiUrl = 'https://script.google.com/macros/s/AKfycbyD_LXpUnn6BSWGIMiyvWtXJW11QfsYyn6xCgwY5L-cmn6jSO4z3oJBXt0Z6Rk3tgND/exec'; // 替換為你的 Apps Script 部署 URL
+            const cupId = localStorage.getItem('cupId') || "1";
+            const apiUrl = `https://script.google.com/macros/s/AKfycbyD_LXpUnn6BSWGIMiyvWtXJW11QfsYyn6xCgwY5L-cmn6jSO4z3oJBXt0Z6Rk3tgND/exec?type=drinkRecords&cupId=${cupId}`; // 替換為你的 Apps Script 部署 URL
 
             try {
                 const response = await fetch(apiUrl);
@@ -133,12 +136,20 @@
         async function displayFootprintsWithRoutes(map) {
             const footprints = await fetchFootprints();
 
-            if (footprints.length < 2) {
-                console.warn("Not enough footprints to display routes.");
+            if (footprints.length === 0) {
+                console.warn("No footprints to display.");
                 return;
             }
 
             const bounds = new google.maps.LatLngBounds();
+            // 當只有一筆紀錄時，直接添加標記並調整地圖範圍
+            if (footprints.length === 1) {
+                addMarker(map, footprints[0], bounds, true); // 添加標記，並標示為最新的紀錄
+                map.fitBounds(bounds); // 調整地圖範圍
+                return; // 不需要繪製路線，直接結束函數
+            }
+
+            // 當有多筆紀錄時，處理路線繪製
             const directionsService = new google.maps.DirectionsService();
 
             for (let i = 0; i < footprints.length - 1; i++) {
@@ -147,7 +158,7 @@
 
                 addMarker(map, footprints[i], bounds);
 
-                // 計算路徑顏色的深淺，範圍從 #FFDDDD（淺紅）到 #CC0000（深紅）
+                // 計算路徑顏色的深淺
                 const color = getGradientColor("#8E8E8E", "#000000", i / (footprints.length - 1));
 
                 // 使用 DirectionsService 計算路徑
@@ -188,16 +199,16 @@
             const latestFootprint = footprints[footprints.length - 1];
             const latestPosition = { lat: latestFootprint.lat, lng: latestFootprint.lng };
 
-            const cuppyMarker = new google.maps.Marker({
-                position: latestPosition,
-                map: map,
-                title: "Latest Location",
-                icon: {
-                    url: "pictures/cuppy_avatar.png", // 替換為你的 Cuppy 圖片 URL
-                    scaledSize: new google.maps.Size(30, 30), // 調整圖片大小
-                    anchor: new google.maps.Point(15, 40), // 圖片的錨點（相對於底部）
-                },
-            });
+            // const cuppyMarker = new google.maps.Marker({
+            //     position: latestPosition,
+            //     map: map,
+            //     title: "Latest Location",
+            //     icon: {
+            //         // url: "./assets/images/${cupId}/avatar.webp", // 替換為你的 Cuppy 圖片 URL
+            //         scaledSize: new google.maps.Size(30, 30), // 調整圖片大小
+            //         anchor: new google.maps.Point(15, 40), // 圖片的錨點（相對於底部）
+            //     },
+            // });
 
             map.fitBounds(bounds);
         }
@@ -248,13 +259,13 @@
                 title: record.shop,
             });
 
-            // 如果是最新的記錄，使用 Cuppy 圖標
-            if (isLatest) {
-                markerOptions.icon = {
-                    url: "path/to/cuppy.png", // 替換為 Cuppy 的圖片路徑
-                    scaledSize: new google.maps.Size(50, 50), // 調整圖標大小
-                };
-            }
+            // // 如果是最新的記錄，使用 Cuppy 圖標
+            // if (isLatest) {
+            //     markerOptions.icon = {
+            //         url: "./assets/images/${cupId}/avatar.webp", // 替換為 Cuppy 的圖片路徑
+            //         scaledSize: new google.maps.Size(50, 50), // 調整圖標大小
+            //     };
+            // }
 
             const infoWindow = new google.maps.InfoWindow({
                 content: `

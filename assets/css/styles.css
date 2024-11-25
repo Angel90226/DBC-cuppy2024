@@ -24,17 +24,17 @@ body {
     background-repeat: no-repeat;
 }
 body.index {
-    background: url('../images/cuppy_hide.png') no-repeat center 60% fixed;
+    background: no-repeat center 60% fixed;
     background-size: 70% auto;
 }
 
 body.home {
-    background: url('../images/cuppy_full.webp') no-repeat center 50% fixed;
+    background: no-repeat center 50% fixed;
     background-size: 70% auto;
 }
 body.journal {
-    background: url('../images/cuppy_front.png') no-repeat center 50% fixed;
-            background-size: 100% auto;
+    background: no-repeat center 50% fixed;
+    background-size: 100% auto;
 }
 
 .banner {

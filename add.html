@@ -8,6 +8,7 @@
     <title>Cuppy-Add</title>
 </head>
 <body>
+    <script src="./assets/js/script.js"></script>
     <div class="dialog-box">
         <h2>新增我的飲料日記</h2>
         <p>我想記下我們一起喝的飲料!</p>
@@ -64,7 +65,8 @@
             }
 
             // 獲取表單中各個欄位的值
-            const username = localStorage.getItem('username') || "Guest"; // 如果未設置 username，設置為 "Guest"         
+            const username = localStorage.getItem('username') || "Guest"; // 如果未設置 username，設置為 "Guest"   
+            const cupId = localStorage.getItem('cupId');      
             const drink = form.drink.value;
             const sugarIce = form['sugar-ice'].value;
 
@@ -76,6 +78,7 @@
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: new URLSearchParams({
                         username: username,
+                        cupId: cupId,
                         shop: selectedStore.name,
                         address: selectedStore.address,
                         lat: selectedStore.lat,
