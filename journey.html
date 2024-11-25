@@ -3,75 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Yusei+Magic&family=Zen+Maru+Gothic&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="./assets/css/styles.css">
     <title>Cuppy-Journey</title>
-    <style>
-        body {
-            font-family: "Yusei Magic", serif;
-        }
-        #map {
-            height: 87.5vh;
-            width: 100%;
-            /* background-color: #7EDCF8; */
-        }
-        #searchInput {
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 9999;
-            width: 80%;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        .btn-group {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            background-color: #f7dbdc;
-        }
-        .btn-primary {
-            width: 25%;
-            padding: 20px;
-            border: none;
-            background-color: #f7dbdc;
-            color: #CC6B69;
-            font-size: 1.4rem;
-        }
-        .btn-primary:hover {
-            background-color: #CC6B69;
-            color: #f7dbdc;
-        }
-        .btn.btn-primary:active {
-            background-color: #a85352 !important; /* 強制覆蓋 */
-            color: #ffffff !important; /* 強制修改文字顏色 */
-            box-shadow: inset 0px 4px 6px rgba(0, 0, 0, 0.2); /* 點擊時的按壓效果 */
-            border-color: #a85352 !important; /* 防止邊框顏色也被影響 */
-        }
-        .btn.active {
-            background-color: #e0b5b7 !important; /* 當前頁面的背景色 */
-            color: #b34846 !important; /* 當前頁面的文字顏色 */
-            border: 2px solid #d48887; /* 可選：添加白色邊框 */
-            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2); /* 按壓效果 */
-        }
-    </style>
 </head>
 <body>
     <!-- 搜索框 -->
-    <input id="searchInput" type="text" placeholder="輸入飲料店，例如 五桐號清大店">
+    <input id="searchInput" type="text" placeholder="輸入飲料店，例如 五桐號清大店" style="display: none;">
     <!-- 地圖容器 -->
     <div id="map"></div>
 
+    <!-- 前導說明遮罩 -->
+    <div id="introOverlay" class="overlay">
+        <div class="chat-box">
+            <div class="chat-bubble">
+                <img src="./assets/images/cuppy_avatar.png" alt="Cuppy" class="chat-avatar">
+                <div id="chatMessage" class="chat-message">
+                    <p>這是目前為止我旅行過的地方!</p>
+                </div>
+            </div>
+            <button id="nextStep" class="intro-button">下一步</button>
+        </div>
+    </div>
+
+
     <script>
+        const cupId = 'localStorage.getItem("cupId")';
+
+        // 動態生成圖片路徑
+        const avatarSrc = `assets/images/cuppy${cupId}/avatar.png`;
+        const mapMarkerSrc = `assets/images/cuppy${cupId}/mapmarker.webp`;
+
+        // 將圖片路徑插入到 HTML
+        document.getElementById("chat-avatar").src = avatarSrc;
+        document.getElementById("cuppyMapMarker").src = mapMarkerSrc;
+
+
         function initMap() {
             // 初始化地圖，設定位置和縮放級別
             const center = { lat: 24.786680585228307, lng: 120.98827921202404 }; // 台積館 經緯度
@@ -227,9 +193,9 @@
                 map: map,
                 title: "Latest Location",
                 icon: {
-                    url: "pictures/cuppy_full.png", // 替換為你的 Cuppy 圖片 URL
-                    scaledSize: new google.maps.Size(30, 40), // 調整圖片大小
-                    anchor: new google.maps.Point(15, 50), // 圖片的錨點（相對於底部）
+                    url: "pictures/cuppy_avatar.png", // 替換為你的 Cuppy 圖片 URL
+                    scaledSize: new google.maps.Size(30, 30), // 調整圖片大小
+                    anchor: new google.maps.Point(15, 40), // 圖片的錨點（相對於底部）
                 },
             });
 
@@ -275,12 +241,20 @@
         }
 
         //工具函數: 添加標記
-        function addMarker(map, record, bounds) {
+        function addMarker(map, record, bounds, isLatest = false) {
             const marker = new google.maps.Marker({
                 position: { lat: record.lat, lng: record.lng },
                 map: map,
                 title: record.shop,
             });
+
+            // 如果是最新的記錄，使用 Cuppy 圖標
+            if (isLatest) {
+                markerOptions.icon = {
+                    url: "path/to/cuppy.png", // 替換為 Cuppy 的圖片路徑
+                    scaledSize: new google.maps.Size(50, 50), // 調整圖標大小
+                };
+            }
 
             const infoWindow = new google.maps.InfoWindow({
                 content: `
@@ -329,6 +303,32 @@
     <!-- 加載 Google Maps JavaScript API -->
     <script async
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAAeSuw_qxOX0wFAHk-zHPt8VwTOmG_JE8&libraries=places&language=zh-TW&callback=initMap">
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+        const overlay = document.getElementById("introOverlay");
+        const chatMessage = document.getElementById("chatMessage");
+        const nextStepButton = document.getElementById("nextStep");
+        const searchInput = document.getElementById("searchInput");
+
+        let currentStep = 1;
+
+        nextStepButton.addEventListener("click", () => {
+            if (currentStep === 1) {
+                // 第一步 -> 第二步：聚焦在搜索框
+                chatMessage.innerHTML = `<p>上面的搜尋欄可以搜尋各家飲料店!</p>`;
+                searchInput.style.display = "block"; // 顯示搜尋框
+                nextStepButton.textContent = "我知道了";
+                currentStep++;
+            } else {
+                // 第二步 -> 結束遮罩
+                overlay.style.display = "none";
+            }
+        });
+    });
+
+
     </script>
 
     <div class="btn-group" role="group">
