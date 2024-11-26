@@ -28,11 +28,11 @@ body {
 }
 body.index {
     background: no-repeat center 60% fixed;
-    background-size: 70% auto;
+    background-size: 100% auto;
 }
 
 body.home {
-    background: no-repeat center 50% fixed;
+    background: no-repeat center 60% fixed;
     background-size: 100% auto;
 }
 body.journal {
