@@ -21,20 +21,19 @@
         <h2 id="greeting">Hi [name]!</h2>
         <p></p>
     </div>
-        <div class="btn-group" role="group">
-            <a href="home.html" class="btn btn-primary active">
-            <i class="bi bi-house"></i>
-            </a>
-            <a href="journey.html" class="btn btn-primary">
-            <i class="bi bi-map"></i>
-            </a>
-            <a href="journal.html" class="btn btn-primary">
-                <i class="bi bi-journal"></i>
-            </a>
-            <a href="add.html" class="btn btn-primary">
-                <i class="bi bi-book"></i>
-            </a>
-        </div>
+    <div class="btn-group" role="group">
+        <a href="home.html" class="btn btn-primary active">
+        <i class="bi bi-house"></i>
+        </a>
+        <a href="journey.html" class="btn btn-primary">
+        <i class="bi bi-map"></i>
+        </a>
+        <a href="journal.html" class="btn btn-primary">
+            <i class="bi bi-journal"></i>
+        </a>
+        <a href="collection.html" class="btn btn-primary">
+            <i class="bi bi-book"></i>
+        </a>
     </div>
     <script>
         const cupId = localStorage.getItem('cupId') || "1"; // 從 localStorage 中讀取 cupId，預設為 1
@@ -74,16 +73,16 @@
         document.addEventListener("DOMContentLoaded", playBackgroundAnimation);
     </script>
     <script>
-        const apiUrl = 'https://script.google.com/macros/s/AKfycbyD_LXpUnn6BSWGIMiyvWtXJW11QfsYyn6xCgwY5L-cmn6jSO4z3oJBXt0Z6Rk3tgND/exec';  // 將 Apps Script API URL 儲存成一個變數
         // 從 localStorage 中取出 username
         const username = localStorage.getItem('username');
-        const cuppyName = localStorage.getItem('cuppyName');
         // 如果 username 存在，將其顯示在 greeting 元素中
         if (username) {
             document.getElementById('greeting').textContent = `Hi ${username}!`;
         } else {
             document.getElementById('greeting').textContent = "Hi there!";
         }
+
+        const apiUrl = 'https://script.google.com/macros/s/AKfycbyD_LXpUnn6BSWGIMiyvWtXJW11QfsYyn6xCgwY5L-cmn6jSO4z3oJBXt0Z6Rk3tgND/exec';  // 將 Apps Script API URL 儲存成一個變數
         
         console.log("cupId:", cupId);
         fetchCuppyName(cupId);
@@ -95,13 +94,11 @@
             const cuppy = cuppyNames.find(c => String(c.cupId) === cupId);
             console.log("cuppy:", cuppy);
             if (cuppy) {
-                document.querySelector('.dialog-box p').textContent = `${cuppy.cuppyName}`;
+                document.querySelector('.dialog-box p').textContent = `${cuppy.cuppyGreet}`;
             } else {
                 console.error("找不到對應的 Cuppy 名稱");
             }
         }
     </script>
-    
 </body>
-
 </html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./assets/css/styles.css">
+    <title>Cuppy-Collection</title>
+    <style>
+        .pokedex-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .cuppy-card {
+            background-color: #e7e7e7;
+            border-radius: 10px;
+            text-align: center;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .cuppy-card.seen {
+            background-color: #FFE5E5; /* 淺粉色背景 */
+        }
+
+        .cuppy-card img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+
+        .cuppy-name {
+            font-size: 16px;
+            color: #CC6B69;
+        }
+
+        .cuppy-name.unknown {
+            color: #aaa;
+        }
+
+        /* 模態框樣式 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            max-width: 80%;
+            width: 300px;
+            position: relative;
+        }
+
+        .modal-content img {
+            width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        .modal-content .greeting {
+            font-size: 16px;
+            color: #CC6B69;
+            margin-bottom: 10px;
+        }
+
+        .arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 30px; /* 圖標大小 */
+            color: #CC6B69;
+            cursor: pointer;
+        }
+
+        .arrow.left {
+            left: 5%;
+        }
+
+        .arrow.right {
+            right: 5%;
+        }
+    </style>
+</head>
+<body>
+    <script src="./assets/js/script.js"></script>
+    <div class="content">
+        <div class="pokedex-container" id="pokedex"></div>
+
+    <!-- 模態框 -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-content">
+            <button class="arrow left" id="prevCard">
+                <i class="bi bi-arrow-left-circle-fill"></i>
+            </button>
+            <img id="modalImage" alt="Cuppy">
+            <div class="greeting" id="modalGreeting"></div>
+            <button class="arrow right" id="nextCard">
+                <i class="bi bi-arrow-right-circle-fill"></i>
+            </button>
+        </div>
+    </div>
+    </div>
+
+    <div class="btn-group" role="group">
+        <a href="home.html" class="btn btn-primary">
+        <i class="bi bi-house"></i>
+        </a>
+        <a href="journey.html" class="btn btn-primary">
+        <i class="bi bi-map"></i>
+        </a>
+        <a href="journal.html" class="btn btn-primary">
+            <i class="bi bi-journal"></i>
+        </a>
+        <a href="collection.html" class="btn btn-primary active">
+            <i class="bi bi-book"></i>
+        </a>
+    </div>
+    <script>
+        let currentCardIndex = 0; // 用來追蹤當前卡片索引
+        let pokedexData = []; // 全局變量，用於存放所有的 Cuppy 數據
+
+        async function loadPokedex() {
+            const username = localStorage.getItem('username'); // 用戶名
+            if (!username) {
+                console.error("No username found in localStorage!");
+                return;
+            }
+
+            const apiUrl = 'https://script.google.com/macros/s/AKfycbyD_LXpUnn6BSWGIMiyvWtXJW11QfsYyn6xCgwY5L-cmn6jSO4z3oJBXt0Z6Rk3tgND/exec';
+            const response = await fetch(`${apiUrl}?type=pokedexData&username=${username}`);
+            pokedexData = await response.json();
+
+            const pokedexContainer = document.getElementById('pokedex');
+            pokedexContainer.innerHTML = ''; // 清空內容
+
+            pokedexData.forEach((cuppy, index) => {
+                const card = document.createElement('div');
+                card.className = `cuppy-card ${cuppy.seen ? 'seen' : ''}`;
+                card.dataset.index = index;
+
+                const imgSrc = cuppy.seen
+                    ? `./assets/images/${cuppy.cupId}/full.webp`
+                    : './assets/images/unknown.webp';
+
+                const nameText = cuppy.seen ? cuppy.cuppyName : '???';
+
+                card.innerHTML = `
+                    <img src="${imgSrc}" alt="${nameText}">
+                    <div class="cuppy-name">${nameText}</div>
+                `;
+
+                // 添加點擊事件
+                card.addEventListener('click', () => openModal(index, pokedexData));
+
+                pokedexContainer.appendChild(card);
+            });
+        }
+
+        function openModal(index, pokedexData) {
+            const modal = document.getElementById('modal');
+            const modalImage = document.getElementById('modalImage');
+            const modalGreeting = document.getElementById('modalGreeting');
+
+            currentCardIndex = index;
+            const cuppy = pokedexData[index];
+
+            modalImage.src = cuppy.seen
+                ? `./assets/images/${cuppy.cupId}/full.webp`
+                : './assets/images/unknown.webp';
+            modalGreeting.textContent = cuppy.seen ? cuppy.cuppyGreet : '';
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            modal.style.display = 'none';
+        }
+
+        function changeCard(direction, pokedexData) {
+            currentCardIndex += direction;
+            if (currentCardIndex < 0) currentCardIndex = pokedexData.length - 1;
+            if (currentCardIndex >= pokedexData.length) currentCardIndex = 0;
+
+            openModal(currentCardIndex, pokedexData);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            loadPokedex();
+
+            const modal = document.getElementById('modal');
+            const prevCard = document.getElementById('prevCard');
+            const nextCard = document.getElementById('nextCard');
+
+            prevCard.addEventListener('click', () => changeCard(-1, pokedexData));
+            nextCard.addEventListener('click', () => changeCard(1, pokedexData));
+
+            // 點擊模態框外部關閉模態框
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+        });
+    </script>
+</body>
+</html>

@@ -23,6 +23,9 @@ body {
     background-position: center;
     background-repeat: no-repeat;
 }
+.content {
+    padding-bottom: 60px; /* 留出導航欄的高度 */
+}
 body.index {
     background: no-repeat center 60% fixed;
     background-size: 70% auto;
@@ -114,7 +117,7 @@ body.journal {
     width: 100%;
 }
 .btn-group {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     width: 100%;
     background-color: #f7dbdc;
@@ -274,7 +277,7 @@ body.journal {
 .sticker-item {
     position: relative;
     text-align: center;
-    background-color: #FFD6D6;
+    background-color: #ffffff;
     border-radius: 10px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
     padding: 6px;
@@ -303,18 +306,18 @@ body.journal {
     font-size: 8px;
     color: #666;
 }
-/* 新增貼紙的外觀設計 */
 .sticker-add {
-    background-color: #ffffff; /* 白色背景 */
-    border: 2px dashed #CC6B69; /* 虛線邊框 */
-    border-radius: 10px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100%;
-    position: relative;
+    height: 100px; /* 固定高度，防止變形 */
+    width: 100%;  /* 確保貼紙寬度與其他貼紙一致 */
+    background-color: #f5f5f5;
+    border: 2px dashed #CC6B69; /* 虛線邊框 */
+    border-radius: 10px;
+    text-align: center;
     cursor: pointer;
-    overflow: hidden;
 }
 
 .sticker-add:hover {
@@ -357,7 +360,7 @@ body.journal {
 /* 模態框內容 */
 .modal-content {
     position: relative;
-    background: #FFD6D6;
+    background: #ffffff;
     border-radius: 10px;
     padding: 20px;
     width: 80%;
@@ -379,11 +382,11 @@ body.journal {
 }
 
 .left-arrow {
-    left: -40px;
+    left: -35px;
 }
 
 .right-arrow {
-    right: -40px;
+    right: -35px;
 }
 
 /* 模態框貼紙內容 */
@@ -456,4 +459,41 @@ body.journal {
     display: flex; 
     justify-content: flex-end; 
     align-items: center;
+}
+/* 突出顯示當前用戶的貼紙 */
+.sticker-highlight {
+    background-color: #f6d3d3; /* 淡粉色背景 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* 增加陰影 */
+}
+
+/* 高亮顯示當前用戶的模態框背景 */
+.modal-highlight {
+    background-color: #ffe4e1; /* 淡粉色背景 */
+    border: 2px solid #cc6b69; /* 加粗邊框 */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* 增加陰影 */
+    transform: scale(1.05); /* 放大一點點 */
+    transition: transform 0.2s ease-in-out; /* 平滑過渡 */
+}
+
+.arrow-up {
+    position: absolute;
+    top: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-bottom: 20px solid #CC6B69; /* 箭頭顏色 */
+    z-index: 1001;
+    animation: bounce 1s infinite; /* 添加箭頭上下跳動效果 */
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateX(-50%) translateY(0);
+    }
+    50% {
+        transform: translateX(-50%) translateY(-10px);
+    }
 }

@@ -15,6 +15,8 @@
 
     <!-- 前導說明遮罩 -->
     <div id="introOverlay" class="overlay">
+        <!-- 向上的箭頭 -->
+        <div id="arrowUp" class="arrow-up" style="display: none;"></div>
         <div class="chat-box">
             <div class="chat-bubble">
                 <img id="chat-avatar" class="chat-avatar" alt="Cuppy">
@@ -22,7 +24,7 @@
                     <p>這是目前為止我旅行過的地方!</p>
                 </div>
             </div>
-            <button id="nextStep" class="intro-button">下一步</button>
+            <button id="nextStep" class="intro-button">我知道了</button>
         </div>
     </div>
 
@@ -72,6 +74,12 @@
                 if (!place.geometry) {
                     alert("無法找到該地點，請重新輸入！");
                     return;
+                }
+
+                 // 隱藏 overlay（如果存在）
+                const overlay = document.getElementById("introOverlay");
+                if (overlay && overlay.style.display !== "none") {
+                    overlay.style.display = "none";
                 }
 
                 // 更新地圖中心和標記
@@ -199,17 +207,6 @@
             const latestFootprint = footprints[footprints.length - 1];
             const latestPosition = { lat: latestFootprint.lat, lng: latestFootprint.lng };
 
-            // const cuppyMarker = new google.maps.Marker({
-            //     position: latestPosition,
-            //     map: map,
-            //     title: "Latest Location",
-            //     icon: {
-            //         // url: "./assets/images/${cupId}/avatar.webp", // 替換為你的 Cuppy 圖片 URL
-            //         scaledSize: new google.maps.Size(30, 30), // 調整圖片大小
-            //         anchor: new google.maps.Point(15, 40), // 圖片的錨點（相對於底部）
-            //     },
-            // });
-
             map.fitBounds(bounds);
         }
 
@@ -258,14 +255,6 @@
                 map: map,
                 title: record.shop,
             });
-
-            // // 如果是最新的記錄，使用 Cuppy 圖標
-            // if (isLatest) {
-            //     markerOptions.icon = {
-            //         url: "./assets/images/${cupId}/avatar.webp", // 替換為 Cuppy 的圖片路徑
-            //         scaledSize: new google.maps.Size(50, 50), // 調整圖標大小
-            //     };
-            // }
 
             const infoWindow = new google.maps.InfoWindow({
                 content: `
@@ -318,29 +307,34 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-        const overlay = document.getElementById("introOverlay");
-        const chatMessage = document.getElementById("chatMessage");
-        const nextStepButton = document.getElementById("nextStep");
-        const searchInput = document.getElementById("searchInput");
+            const overlay = document.getElementById("introOverlay");
+            const chatMessage = document.getElementById("chatMessage");
+            const nextStepButton = document.getElementById("nextStep");
+            const searchInput = document.getElementById("searchInput");
+            const arrowUp = document.getElementById("arrowUp");
 
-        let currentStep = 1;
+            // 取得 URL 中的查詢參數
+            const urlParams = new URLSearchParams(window.location.search);
+            const source = urlParams.get('source');
 
-        nextStepButton.addEventListener("click", () => {
-            if (currentStep === 1) {
-                // 第一步 -> 第二步：聚焦在搜索框
-                chatMessage.innerHTML = `<p>上面的搜尋欄可以搜尋各家飲料店!</p>`;
+            // 根據進入方式設定提示內容
+            if (source === 'add') {
+                chatMessage.innerHTML = `<p>Step1: 請先從上方搜尋欄找到飲料店</p>
+                    <p>Step2: 點選"確認店家"</p>`;
                 searchInput.style.display = "block"; // 顯示搜尋框
-                nextStepButton.textContent = "我知道了";
-                currentStep++;
+                arrowUp.style.display = "block"; // 顯示箭頭
+                
             } else {
-                // 第二步 -> 結束遮罩
-                overlay.style.display = "none";
+                chatMessage.innerHTML = `<p>這是我之前去過的地方!</p>`;
             }
+
+            // 點擊「我知道了」後隱藏遮罩
+            nextStepButton.addEventListener("click", () => {
+                overlay.style.display = "none";
+            });
         });
-    });
-
-
     </script>
+
 
     <div class="btn-group" role="group">
         <a href="home.html" class="btn btn-primary">
@@ -350,10 +344,10 @@
         <i class="bi bi-map"></i>
         </a>
         <a href="journal.html" class="btn btn-primary">
-        <i class="bi bi-journal"></i>
+            <i class="bi bi-journal"></i>
         </a>
-        <a href="add.html" class="btn btn-primary">
-        <i class="bi bi-plus-circle"></i>
+        <a href="collection.html" class="btn btn-primary">
+            <i class="bi bi-book"></i>
         </a>
     </div>
 </body>
