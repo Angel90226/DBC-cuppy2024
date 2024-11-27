@@ -134,6 +134,13 @@
                 if (!response.ok) throw new Error("Failed to fetch data");
                 
                 const footprints = await response.json();
+
+                // 如果沒有足跡資料
+                if (footprints.length === 0) {
+                    const chatMessage = document.getElementById("chatMessage");
+                    chatMessage.innerHTML = `<p>我的飲料版圖現在是空的，等你幫我擴大飲料版圖！</p>`;
+                }
+
                 return footprints;
             } catch (error) {
                 console.error("Error fetching footprints:", error);
